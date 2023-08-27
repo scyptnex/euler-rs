@@ -2,6 +2,7 @@ use std::iter::repeat;
 
 /// Get the list of primes below |below|.
 ///
+/// Example:
 /// ```
 /// use euler_rs::prime::sieve;
 /// let primes = sieve(11);
@@ -22,12 +23,4 @@ pub fn sieve(below: usize) -> Vec<u64> {
         }
     }
     primes
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_sieve() {}
 }

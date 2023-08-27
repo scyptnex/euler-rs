@@ -6,6 +6,16 @@ pub struct Fibonacci {
 }
 
 impl Fibonacci {
+    /// An iterator for generating fibonacci numbers.
+    ///
+    /// Example:
+    /// ```
+    /// use euler_rs::fib::Fibonacci;
+    /// assert_eq!(
+    ///     Fibonacci::new(1, 2).take(10).collect::<Vec<u64>>(),
+    ///     vec![1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+    /// );
+    /// ```
     pub fn new(a: u64, b: u64) -> Self {
         Fibonacci {
             next_fib: a,
@@ -22,18 +32,5 @@ impl Iterator for Fibonacci {
         self.next_fib = self.next_next_fib;
         self.next_next_fib = x;
         Some(y)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_seq() {
-        assert_eq!(
-            Fibonacci::new(1, 2).take(10).collect::<Vec<u64>>(),
-            vec![1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
-        );
     }
 }
