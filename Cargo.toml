@@ -3,4 +3,6 @@ name = "euler-rs"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
+[dependencies.num]
+version = "0.4.1"
+num-bigint = true
