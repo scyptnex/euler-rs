@@ -21,3 +21,14 @@ fn is_amicable(n: &u64) -> bool {
 fn sod(n: u64) -> u64 {
     factors::get_factors(n).filter(|x| *x != n).sum()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_solve() {
+        assert!(is_amicable(&220));
+        assert!(!is_amicable(&221));
+    }
+}
