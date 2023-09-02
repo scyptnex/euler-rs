@@ -1,4 +1,5 @@
 use std::cmp::max;
+use std::collections::HashSet;
 use std::iter::{repeat, Iterator};
 
 /// Get the list of primes below |below|.
@@ -100,6 +101,38 @@ impl Iterator for PrimeIt {
         }
         self.nxt += 1;
         Some(self.primes[self.nxt - 1])
+    }
+}
+
+pub struct PrimeBank {
+    it: PrimeIt,
+    mx: u64,
+    ps: HashSet<u64>,
+}
+
+impl PrimeBank {
+    pub fn new() -> Self {
+        PrimeBank {
+            it: PrimeIt::new(),
+            mx: 0,
+            ps: HashSet::new(),
+        }
+    }
+
+    fn dequeue(&mut self) {
+        let nxt = self.it.next().unwrap();
+        self.ps.insert(nxt);
+        self.mx = nxt;
+    }
+
+    fn ensure(&mut self, v: u64) {
+        while self.mx < v {
+            self.dequeue();
+        }
+    }
+    pub fn query(&mut self, n: u64) -> bool {
+        self.ensure(n);
+        return self.ps.contains(&n);
     }
 }
 
