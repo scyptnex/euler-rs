@@ -11,6 +11,18 @@ impl<T: From<u32>> Digs<T> for &str {
     }
 }
 
+impl<T: From<u64>> Digs<T> for u64 {
+    fn digs(&self) -> Vec<T> {
+        if *self < 10 {
+            vec![T::from(*self)]
+        } else {
+            let mut sub = (self / 10).digs();
+            sub.push(T::from(self % 10));
+            sub
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
