@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4.26"
+itertools = "0.11.0"
 
 [dependencies.num]
 version = "0.4.1"

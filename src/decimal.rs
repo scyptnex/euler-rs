@@ -11,13 +11,13 @@ impl<T: From<u32>> Digs<T> for &str {
     }
 }
 
-impl<T: From<u64>> Digs<T> for u64 {
-    fn digs(&self) -> Vec<T> {
+impl Digs<u64> for u64 {
+    fn digs(&self) -> Vec<u64> {
         if *self < 10 {
-            vec![T::from(*self)]
+            vec![*self]
         } else {
             let mut sub = (self / 10).digs();
-            sub.push(T::from(self % 10));
+            sub.push(self % 10);
             sub
         }
     }
@@ -29,7 +29,7 @@ mod tests {
 
     #[test]
     fn test_digits() {
-        let d: String = "1337".to_owned();
-        assert_eq!(d.as_str().digs().iter().sum::<u32>(), 14);
+        assert_eq!("1337".digs().iter().sum::<u32>(), 14);
+        assert_eq!(42.digs(), vec![4, 2]);
     }
 }
