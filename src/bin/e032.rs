@@ -45,6 +45,6 @@ mod tests {
 
     #[test]
     fn test_solve() {
-        assert_eq!(solve(), 0);
+        assert_eq!(numify(&[1, 2, 3]), 123);
     }
 }
