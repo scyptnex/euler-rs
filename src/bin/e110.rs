@@ -11,11 +11,15 @@ fn main() {
             }
         }
     }
-    let s = get_fracs(6)
-        .map(|l| format!("{} + {}", l.0, l.1))
-        .collect::<Vec<_>>()
-        .join("   -   ");
-    println!("{}", s);
+    for i in [2, 10, 50] {
+        println!(
+            "{}",
+            get_fracs(i)
+                .map(|l| format!("{} + {}", l.0, l.1))
+                .collect::<Vec<_>>()
+                .join("   -   ")
+        );
+    }
 }
 
 fn count_fracs(n: u64) -> u64 {
