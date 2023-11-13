@@ -134,6 +134,11 @@ impl PrimeBank {
         self.ensure(n);
         return self.ps.contains(&n);
     }
+
+    pub fn below(&mut self, n: u64) -> impl Iterator<Item = &u64> {
+        self.ensure(n);
+        return self.ps.iter();
+    }
 }
 
 #[cfg(test)]
