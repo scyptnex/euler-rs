@@ -1,8 +1,14 @@
-pub trait Digs<T> {
+pub trait Digs<T: Ord> {
     fn digs(&self) -> Vec<T>;
+
+    fn sdigs(&self) -> Vec<T> {
+        let mut d = self.digs();
+        d.sort();
+        d
+    }
 }
 
-impl<T: From<u32>> Digs<T> for &str {
+impl<T: From<u32> + Ord> Digs<T> for &str {
     fn digs(&self) -> Vec<T> {
         self.chars()
             .filter(|c| c.is_ascii_digit())
