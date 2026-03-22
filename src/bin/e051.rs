@@ -54,7 +54,7 @@ mod tests {
         assert_eq!(dig_replace(100, 1, 0), 0);
 
         let mut pb = PrimeBank::new();
-        assert_eq!(pfsize(13, 1, &mut pb), 7);
+        assert_eq!(pfsize(13, 1, &mut pb), 6);
         assert_eq!(pfsize(56003, 0, &mut pb), 7);
 
         assert_eq!(mpfsize(56003, &mut pb), 7);
