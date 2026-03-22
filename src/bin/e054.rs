@@ -49,6 +49,7 @@ impl Hand {
             Hand::triple,
             Hand::straight,
             Hand::flush,
+            Hand::quad,
         ];
         dscs.iter()
             .enumerate()
@@ -56,6 +57,15 @@ impl Hand {
             .map(|(i, v)| ((i as u64) << 32) | (v as u64))
             .max()
             .unwrap()
+    }
+
+    /// For when you have 4 of the same card.
+    fn quad(&self) -> Option<u32> {
+        self.hgram()
+            .iter()
+            .filter(|kv| *kv.1 == 4)
+            .map(|kv| *kv.0)
+            .max()
     }
 
     fn flush(&self) -> Option<u32> {
