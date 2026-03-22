@@ -1,9 +1,9 @@
-fn main() {
-    println!("{}", solve());
-}
-
 fn solve() -> u64 {
     0
+}
+
+fn main() {
+    println!("{}", solve());
 }
 
 #[cfg(test)]
