@@ -1,5 +1,4 @@
 use euler_rs::res::get_input;
-use num::integer;
 use std::fs::read_to_string;
 
 fn main() {

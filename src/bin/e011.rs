@@ -51,7 +51,7 @@ fn solve() -> u64 {
             (0..4)
                 .map(|x| (r + ri * x, c + ci * x))
                 .filter(|(r, c)| *r >= 0 && *c >= 0)
-                .map(|(r, c)| (grid[r as usize][c as usize] as u64))
+                .map(|(r, c)| grid[r as usize][c as usize] as u64)
                 .product()
         })
         .max()

@@ -34,16 +34,12 @@ fn get_fracs(n: u64) -> impl Iterator<Item = (Ratio<u64>, Ratio<u64>)> {
         .filter(|(_, yf)| *yf.numer() == 1)
 }
 
-fn solve() -> u64 {
-    0
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_solve() {
-        assert_eq!(solve(), 0);
+        assert_eq!(count_fracs(10), 5);
     }
 }

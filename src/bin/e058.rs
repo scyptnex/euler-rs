@@ -28,12 +28,12 @@ fn main() {
     println!("{}", solve());
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_solve() {
-        //assert_eq!(solve(), 26241);
-    }
-}
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+//
+//     #[test]
+//     fn test_solve() {
+//         assert_eq!(solve(), 26241);
+//     }
+// }
