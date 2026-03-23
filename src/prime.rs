@@ -1,6 +1,54 @@
+use bit_vec::BitVec;
 use std::cmp::max;
 use std::collections::HashSet;
 use std::iter::{repeat, Iterator};
+
+/// Simple prime sieve implementation.
+pub struct PrimeSieve {
+    s: BitVec,
+}
+
+impl PrimeSieve {
+    pub fn new(limit: usize) -> Self {
+        let mut sv = Self {
+            s: BitVec::from_elem(limit, false),
+        };
+        for n in (1..).map(|i| i * 2 + 1) {
+            if n * n > limit {
+                break;
+            }
+            if sv.is_prime(n) {
+                let mut c = n * n;
+                loop {
+                    if c >= limit {
+                        break;
+                    }
+                    sv.mark_composite(c);
+                    c += 2 * n;
+                }
+            }
+        }
+        sv
+    }
+
+    pub fn is_prime(&self, val: usize) -> bool {
+        if val <= 2 || val % 2 == 0 {
+            return val == 2;
+        }
+        let idx = (val - 3) / 2;
+        // primes are false in the bitset
+        !self.s.get(idx).unwrap()
+    }
+
+    fn mark_composite(&mut self, val: usize) {
+        if val <= 2 {
+            return;
+        }
+        let idx = (val - 3) / 2;
+        // primes are false in the bitset
+        self.s.set(idx, true);
+    }
+}
 
 /// Get the list of primes below |below|.
 ///
