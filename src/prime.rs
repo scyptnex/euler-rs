@@ -1,17 +1,39 @@
 use bit_vec::BitVec;
 use std::cmp::max;
 use std::collections::HashSet;
-use std::iter::{repeat, Iterator};
+use std::iter::{repeat, Enumerate, Iterator};
 
 /// Simple prime sieve implementation.
 pub struct PrimeSieve {
     s: BitVec,
 }
 
+pub struct PrimeSieveIter<'a> {
+    it: Enumerate<bit_vec::Iter<'a>>,
+    sent_two: bool,
+}
+
+impl Iterator for PrimeSieveIter<'_> {
+    type Item = usize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if !self.sent_two {
+            self.sent_two = true;
+            return Some(2);
+        }
+        while let Some((i, v)) = self.it.next() {
+            if !v {
+                return Some((i * 2) + 3);
+            }
+        }
+        None
+    }
+}
+
 impl PrimeSieve {
     pub fn new(limit: usize) -> Self {
         let mut sv = Self {
-            s: BitVec::from_elem(limit, false),
+            s: BitVec::from_elem((limit - 3) / 2 + 1, false),
         };
         for n in (1..).map(|i| i * 2 + 1) {
             if n * n > limit {
@@ -47,6 +69,13 @@ impl PrimeSieve {
         let idx = (val - 3) / 2;
         // primes are false in the bitset
         self.s.set(idx, true);
+    }
+
+    pub fn iter(&self) -> PrimeSieveIter<'_> {
+        PrimeSieveIter {
+            it: self.s.iter().enumerate(),
+            sent_two: false,
+        }
     }
 }
 
@@ -191,6 +220,8 @@ impl PrimeBank {
 
 #[cfg(test)]
 mod tests {
+    use itertools::Itertools;
+
     use super::*;
 
     #[test]
@@ -209,6 +240,18 @@ mod tests {
         assert_eq!(
             Sieve::new(2, 20).exclude_sift(),
             vec![2, 3, 5, 7, 11, 13, 17, 19]
+        );
+    }
+
+    #[test]
+    fn test_prime_iter() {
+        assert_eq!(PrimeSieve::new(6).iter().collect_vec(), vec![2, 3, 5]);
+        assert_eq!(PrimeSieve::new(7).iter().collect_vec(), vec![2, 3, 5, 7]);
+        assert_eq!(PrimeSieve::new(8).iter().collect_vec(), vec![2, 3, 5, 7]);
+
+        assert_eq!(
+            PrimeSieve::new(30).iter().collect_vec(),
+            vec![2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
         );
     }
 }
