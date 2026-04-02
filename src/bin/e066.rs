@@ -1,69 +1,27 @@
-use std::collections::HashSet;
+use euler_rs::sqrt::{evaluate_continued_frac, find_continued_period, ContinuedFraction};
+use num::BigRational;
 
-fn diophantine(d: usize) -> (usize, usize) {
-    (2..)
-        .map(|x| (x, (x * x - 1)))
-        //.inspect(|v| {
-        //    println!("  {:?}", v);
-        //})
-        .filter(|(_, r)| r % d == 0)
-        .map(|(x, r)| (x, r / d))
-        //.inspect(|v| {
-        //    println!("  {} -> {:?}", d, v);
-        //})
-        .filter(|(_, y)| y.isqrt() * y.isqrt() == *y)
-        .next()
-        .unwrap()
+// Returns a ratio x/y that minimizes the equation x^2 - dy^2 = 1.
+fn fundamental_diophantine(d: usize) -> BigRational {
+    let (_, p) = find_continued_period(d);
+    let r = p.len();
+    let sol = if r % 2 == 0 { r } else { 2 * r };
+    let terms = ContinuedFraction::new(d).take(sol).collect();
+    let fundamental = evaluate_continued_frac(terms);
+    fundamental
 }
 
-fn old_min_dio(d_in: usize) -> usize {
+fn greatest_x_diophantine(d_in: usize) -> usize {
     (2..=d_in)
         .filter(|d| d.isqrt() * d.isqrt() != *d)
-        .map(|d| (d, diophantine(d)))
-        .inspect(|d| {
-            dbg!(d);
-        })
-        .max_by_key(|(_, dph)| dph.0)
+        .map(|d| (d, fundamental_diophantine(d)))
+        .max_by(|(_, x1), (_, x2)| x1.numer().cmp(x2.numer()))
         .unwrap()
         .0
 }
 
-fn min_dio(d_in: usize) -> usize {
-    let mut remaining = (2..=d_in)
-        .filter(|d| d.isqrt() * d.isqrt() != *d)
-        .collect::<HashSet<usize>>();
-    for x in 2.. {
-        let target = x * x - 1;
-        let mut remv = Vec::new();
-        for r in &remaining {
-            if target % r != 0 {
-                continue;
-            }
-            let ysq = target / r;
-            if ysq.isqrt() * ysq.isqrt() != ysq {
-                continue;
-            }
-            println!(
-                "{}^2 - {} * {}^2 = 1   ({} remaining)",
-                x,
-                r,
-                ysq.isqrt(),
-                remaining.len()
-            );
-            remv.push(*r);
-        }
-        for r in remv {
-            remaining.remove(&r);
-            if remaining.is_empty() {
-                return r;
-            }
-        }
-    }
-    panic!();
-}
-
 fn solve() -> usize {
-    min_dio(1000)
+    greatest_x_diophantine(1000)
 }
 
 fn main() {
@@ -76,6 +34,6 @@ mod tests {
 
     #[test]
     fn test_solve() {
-        assert_eq!(min_dio(7), 5);
+        assert_eq!(greatest_x_diophantine(7), 5);
     }
 }

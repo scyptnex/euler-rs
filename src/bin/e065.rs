@@ -1,7 +1,6 @@
+use euler_rs::sqrt::evaluate_continued_frac;
 use itertools::*;
 use num::BigRational;
-use num::FromPrimitive;
-use num::One;
 
 fn e_term(i: usize) -> usize {
     if i == 0 {
@@ -14,12 +13,7 @@ fn e_term(i: usize) -> usize {
 }
 
 fn frac(n: usize) -> BigRational {
-    let v = (0..n).map(e_term).collect_vec();
-    let mut cur = BigRational::from_usize(*v.last().unwrap()).unwrap();
-    for i in v.iter().rev().skip(1) {
-        cur = BigRational::from_usize(*i).unwrap() + (BigRational::one() / cur);
-    }
-    cur
+    evaluate_continued_frac((0..n).map(e_term).collect_vec())
 }
 
 fn solve() -> u32 {
@@ -37,7 +31,7 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-    use num::BigInt;
+    use num::{BigInt, FromPrimitive};
 
     use super::*;
 
