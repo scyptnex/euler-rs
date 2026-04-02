@@ -1,82 +1,22 @@
 use std::collections::{hash_map::Entry, HashMap};
 
-// a(sqrt(x) + b)/c
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
-struct Numi {
-    a: isize,
-    x: usize,
-    b: isize,
-    c: isize,
-}
+use euler_rs::sqrt::ContinuedFraction;
 
-impl Numi {
-    fn start(x: usize) -> Self {
-        Self {
-            a: 1,
-            x,
-            b: 0,
-            c: 1,
-        }
-    }
-
-    // t + remainder == original
-    fn pull_term(&self) -> (isize, Self) {
-        let t = self.estimate();
-        let abmtc = self.a * self.b - self.c * t;
-        assert!(abmtc % self.a == 0);
-        let new_b = abmtc / self.a;
-        (
-            t,
-            Self {
-                a: self.a,
-                x: self.x,
-                b: new_b,
-                c: self.c,
-            },
-        )
-    }
-
-    fn to_f64(&self) -> f64 {
-        let estim = self.x as f64;
-        let estim = estim.sqrt() + (self.b as f64);
-        let estim = estim * (self.a as f64);
-        estim / (self.c as f64)
-    }
-
-    fn estimate(&self) -> isize {
-        (self.to_f64().floor()) as isize
-    }
-
-    // self (0,1) -> 1/ ret(>1)
-    fn inv(&self) -> Self {
-        let a = self.c;
-        let b = -self.b;
-        let c = self.a * (self.x as isize) - self.a * self.b * self.b;
-        assert!(c % a == 0);
-        let c = c / a;
-        let a = 1;
-        Self { a, x: self.x, b, c }
-    }
-}
-
-fn frac_period(n: usize) -> (Vec<isize>, usize) {
+fn frac_period(n: usize) -> (Vec<usize>, usize) {
     if n.isqrt() * n.isqrt() == n {
         return (Vec::new(), 0);
     }
-    let mut cur = Numi::start(n);
+    let mut cur = ContinuedFraction::new(n);
     let mut ret = Vec::new();
-    let mut memo = HashMap::<Numi, usize>::new();
+    let mut memo = HashMap::<ContinuedFraction, usize>::new();
     loop {
-        let (addi, remi) = cur.pull_term();
-        ret.push(addi);
-        let entry = memo.entry(remi);
+        let entry = memo.entry(cur);
         if let Entry::Occupied(en) = entry {
             return (ret, *en.get());
         }
         entry.or_insert(ret.len());
-        let remf = remi.to_f64();
-        assert!(remf > 0f64 && remf < 1f64);
-        cur = remi.inv();
+        let t = cur.next().unwrap();
+        ret.push(t);
     }
 }
 
