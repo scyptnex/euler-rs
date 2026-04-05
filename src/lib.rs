@@ -5,3 +5,4 @@ pub mod number;
 pub mod prime;
 pub mod res;
 pub mod sqrt;
+pub mod totient;

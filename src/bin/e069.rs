@@ -1,12 +1,4 @@
-use euler_rs::{factors::prime_factors, prime::PrimeSieve};
-
-fn totient(n: u64, ps: &PrimeSieve) -> u64 {
-    let mut ret = n;
-    for (p, _) in prime_factors(n, ps).iter() {
-        ret = ret - (ret / p);
-    }
-    ret
-}
+use euler_rs::{prime::PrimeSieve, totient::totient};
 
 fn solve(n: u64) -> u64 {
     let ps = PrimeSieve::new(n as usize);

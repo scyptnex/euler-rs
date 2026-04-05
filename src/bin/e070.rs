@@ -1,26 +1,6 @@
-use itertools::Itertools;
+use euler_rs::totient::totient_sieve;
 
-fn totient_sieve(lim: u32) -> Vec<u32> {
-    let mut v = (0..=lim).collect_vec();
-    for idx in 2..=lim {
-        // ignore composites
-        if v[idx as usize] != idx {
-            continue;
-        }
-        // idx is prime
-        v[idx as usize] = idx - 1;
-        (2..)
-            .map(|m| m * idx)
-            .take_while(|m| *m <= lim)
-            .map(|m| m as usize)
-            .for_each(|m| {
-                v[m] = v[m] - (v[m] / idx);
-            });
-    }
-    v
-}
-
-fn digit_frequency_histogram(n: u32) -> [usize; 10] {
+fn digit_frequency_histogram(n: u64) -> [usize; 10] {
     let mut ret = [0; 10];
     let mut n = n;
     if n == 0 {
@@ -35,12 +15,12 @@ fn digit_frequency_histogram(n: u32) -> [usize; 10] {
 }
 
 fn solve(lim: u32) -> u32 {
-    totient_sieve(lim)
+    totient_sieve(lim as u64)
         .into_iter()
         .enumerate()
         .skip(2)
         .filter(|(n, phin)| {
-            digit_frequency_histogram(*n as u32) == digit_frequency_histogram(*phin)
+            digit_frequency_histogram(*n as u64) == digit_frequency_histogram(*phin)
         })
         //.inspect(|x| {
         //    println!("{x:?}");
@@ -58,11 +38,6 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_tot_sieve() {
-        assert_eq!(totient_sieve(10), vec![0, 1, 1, 2, 2, 4, 2, 6, 4, 6, 4]);
-    }
 
     #[test]
     fn test_solve() {
