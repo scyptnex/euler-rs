@@ -1,6 +1,6 @@
-use euler_rs::res::get_input;
+use euler_rs::infile;
 use itertools::Itertools;
-use std::{fs::read_to_string, str::FromStr};
+use std::str::FromStr;
 
 #[derive(Debug)]
 struct Card {
@@ -130,8 +130,7 @@ impl Hand {
 }
 
 fn solve() -> usize {
-    read_to_string(get_input("0054_poker.txt"))
-        .unwrap()
+    infile!()
         .lines()
         .filter(|l| {
             let h = l.split(" ").collect::<Vec<_>>();

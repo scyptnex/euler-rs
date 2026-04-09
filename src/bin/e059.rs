@@ -1,6 +1,6 @@
-use euler_rs::res::get_input;
+use euler_rs::infile;
 use itertools::Itertools;
-use std::{collections::HashSet, fs::read_to_string};
+use std::collections::HashSet;
 
 fn decipher(ct: &Vec<u8>, k: [u8; 3]) -> Option<String> {
     let v: Vec<u8> = ct.iter().enumerate().map(|(i, b)| b ^ k[i % 3]).collect();
@@ -24,8 +24,7 @@ fn keyspace() -> impl Iterator<Item = [u8; 3]> {
 
 fn solve() -> usize {
     let engl = HashSet::from(["a", "the", "you", "me", "for", "to"]);
-    let cipher = read_to_string(get_input("0059_cipher.txt"))
-        .unwrap()
+    let cipher = infile!()
         .split(",")
         .map(|s| s.parse::<u8>().unwrap())
         .collect_vec();

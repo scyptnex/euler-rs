@@ -1,13 +1,11 @@
-use euler_rs::res::get_input;
-use std::fs::read_to_string;
+use euler_rs::infile;
 
 fn main() {
     println!("{}", solve());
 }
 
 fn solve() -> u64 {
-    let mut names: Vec<String> = read_to_string(get_input("0022_names.txt"))
-        .unwrap()
+    let mut names: Vec<String> = infile!()
         .split(',')
         .map(|s| s.chars().filter(|c| *c != '"').collect())
         .collect();

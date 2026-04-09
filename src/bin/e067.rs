@@ -1,9 +1,7 @@
-use std::fs::read_to_string;
-
-use euler_rs::res::get_input;
+use euler_rs::infile;
 
 fn solve() -> u64 {
-    let data: String = read_to_string(get_input("0067_triangle.txt")).unwrap();
+    let data = infile!();
     let grid: Vec<Vec<u64>> = data
         .lines()
         .map(|l| l.split(' ').map(|v| v.parse::<u64>().unwrap()).collect())
