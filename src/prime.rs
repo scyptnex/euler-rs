@@ -42,7 +42,7 @@ impl PrimeSieve {
             if sv.is_prime(n) {
                 let mut c = n * n;
                 loop {
-                    if c >= limit {
+                    if c > limit {
                         break;
                     }
                     sv.mark_composite(c);
@@ -223,6 +223,13 @@ mod tests {
     use itertools::Itertools;
 
     use super::*;
+
+    #[test]
+    fn test_sieve_all_primes() {
+        // just a bug i gound doing problem 87.
+        let ps = PrimeSieve::new(7071);
+        assert!(!ps.is_prime(7071));
+    }
 
     #[test]
     fn test_sieve() {
