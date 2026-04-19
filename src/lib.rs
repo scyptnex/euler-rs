@@ -1,3 +1,4 @@
+pub mod debug;
 pub mod decimal;
 pub mod factors;
 pub mod fib;
