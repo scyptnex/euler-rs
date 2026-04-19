@@ -1,42 +1,10 @@
-use std::cmp::{max, min};
 use std::collections::{HashMap, HashSet};
 
-// Returns the set of (a, b)s for which a, b, and sqrt(a^2 + b^2)
-// form a primitive pythagorean triple.
-fn primitive_pythagorean_triples(lim: u64) -> HashSet<(u64, u64)> {
-    let mut ret = HashSet::new();
-    for n in 1..lim {
-        for m_in in 1.. {
-            let m = if n % 2 == 0 {
-                n + m_in
-            } else {
-                // n is odd so make m every even number starting at n+1
-                (n - 1) + 2 * m_in
-            };
-            let a = m * m - n * n;
-            let b = 2 * m * n;
-            let aa = min(a, b);
-            let bb = max(a, b);
-            if aa > lim {
-                break;
-            }
-            ret.insert((aa, bb));
-        }
-    }
-    ret
-}
+use euler_rs::pythagorean_triples::pythagorean_triples;
 
 fn solve() -> u64 {
     let lim = 2000;
-    let prim_triples = primitive_pythagorean_triples(lim);
-    let all_triples: HashSet<(u64, u64)> = prim_triples
-        .iter()
-        .flat_map(|(a, b)| {
-            (1..)
-                .map(move |k| (k * a, k * b))
-                .take_while(|(a, _)| *a <= lim)
-        })
-        .collect();
+    let all_triples = pythagorean_triples(lim);
     let mut a_to_bs = HashMap::<u64, HashSet<u64>>::new();
     let mut b_to_as = HashMap::<u64, HashSet<u64>>::new();
     for (a, b) in &all_triples {

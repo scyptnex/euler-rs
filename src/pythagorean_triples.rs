@@ -1,90 +1,67 @@
-use num::integer::gcd;
+use std::cmp::{max, min};
+use std::collections::HashSet;
 
-pub type Triple = (u64, u64, u64);
-
-#[derive(Debug, Clone, Copy)]
-pub struct PrimitiveTriple {
-    m: u64,
-    n: u64,
-}
-
-impl PrimitiveTriple {
-    fn new(m: u64, n: u64) -> Self {
-        Self { m, n }
-    }
-
-    pub fn m(&self) -> u64 {
-        self.m
-    }
-
-    pub fn n(&self) -> u64 {
-        self.n
-    }
-
-    pub fn triple(&self) -> Triple {
-        let m = self.m;
-        let n = self.n;
-        (m * m - n * n, 2 * m * n, m * m + n * n)
-    }
-}
-
-pub struct PrimTriples {
-    m: u64,
-    n: u64,
-}
-
-impl PrimTriples {
-    fn new() -> Self {
-        PrimTriples { m: 2, n: 1 }
-    }
-}
-
-impl Iterator for PrimTriples {
-    type Item = PrimitiveTriple;
-    fn next(&mut self) -> Option<Self::Item> {
-        let ret = PrimitiveTriple::new(self.m, self.n);
-        loop {
-            self.n += 1;
-            if self.n == self.m {
-                self.m += 1;
-                self.n = 1;
+/// Returns the set of (a, b)s for which a, b, and sqrt(a^2 + b^2)
+/// form a primitive pythagorean triple and a <= lim.
+pub fn primitive_pythagorean_triples(lim: u64) -> HashSet<(u64, u64)> {
+    let mut ret = HashSet::new();
+    for n in 1..lim {
+        for m_in in 1.. {
+            let m = if n % 2 == 0 {
+                n + m_in
+            } else {
+                // n is odd so make m every even number starting at n+1
+                (n - 1) + 2 * m_in
+            };
+            let a = m * m - n * n;
+            let b = 2 * m * n;
+            let aa = min(a, b);
+            let bb = max(a, b);
+            if aa > lim {
                 break;
             }
-            if self.n % 2 == 1 && self.m % 2 == 1 {
-                continue;
-            }
-            if gcd(self.n, self.m) != 1 {
-                continue;
-            }
-            break;
+            ret.insert((aa, bb));
         }
-        Some(ret)
     }
+    ret
 }
 
-pub fn triples() -> PrimTriples {
-    PrimTriples::new()
+pub fn pythagorean_triples(lim: u64) -> HashSet<(u64, u64)> {
+    primitive_pythagorean_triples(lim)
+        .iter()
+        .flat_map(|(a, b)| {
+            (1..)
+                .map(move |k| (k * a, k * b))
+                .take_while(|(a, _)| *a <= lim)
+        })
+        .collect()
 }
 
 #[cfg(test)]
 mod tests {
-    use itertools::Itertools;
-
     use super::*;
 
     #[test]
-    fn test_primitive_triple() {
-        let pt = PrimitiveTriple::new(3, 2);
-        assert_eq!(pt.m(), 3);
-        assert_eq!(pt.n(), 2);
-        assert_eq!(pt.triple(), (5, 12, 13));
-    }
-
-    #[test]
-    fn test_triples() {
+    fn test_primitive() {
         assert_eq!(
-            triples().take(5).map(|t| (t.n(), t.m())).collect_vec(),
-            vec![(1, 2), (1, 3), (2, 3), (1, 4), (3, 4)]
+            primitive_pythagorean_triples(10),
+            HashSet::from([(3, 4), (5, 12), (7, 24), (8, 15), (9, 40)])
+        );
+    }
+    #[test]
+    fn test_all() {
+        assert_eq!(
+            pythagorean_triples(10),
+            HashSet::from([
+                (3, 4),
+                (6, 8),
+                (9, 12),
+                (5, 12),
+                (10, 24),
+                (7, 24),
+                (8, 15),
+                (9, 40)
+            ])
         );
     }
 }
