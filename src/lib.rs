@@ -4,6 +4,7 @@ pub mod factors;
 pub mod fib;
 pub mod number;
 pub mod prime;
+pub mod pythagorean_triples;
 pub mod res;
 pub mod sqrt;
 pub mod totient;
