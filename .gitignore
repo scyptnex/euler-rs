@@ -12,3 +12,7 @@ target/
 
 # Vim backups
 **/.*.swp
+
+# Cargo flamegraph
+perf.data*
+flamegraph.svg
