@@ -28,5 +28,6 @@ mod tests {
     fn test_solve() {
         assert_eq!(solve(20), 15);
         assert_eq!(solve(22), 85);
+        assert_eq!(solve(1_000_000_000_000), 756872327473);
     }
 }
